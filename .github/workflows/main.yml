@@ -76,10 +76,17 @@ jobs:
     needs: deploy-to-ec2
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
-      - name: Comprobar estado de la app
-        uses: dawidd6/action-http-request@v3
-        with:
-          url: http://${{ secrets.IP_EC2 }}:8000/version
-          method: GET
-          timeout: 10
-          expected_status: 200      
+    - name: Esperar a que la app esté disponible (reintentos)
+      run: |
+        for i in {1..5}; do
+          if curl -s --fail http://${{ secrets.IP_EC2 }}:8000/version; then
+            echo "App OK"
+            exit 0
+          else
+            echo "Esperando... intento $i"
+            sleep 5
+          fi
+        done
+        echo "La app no respondió a tiempo"
+        exit 1
+   
