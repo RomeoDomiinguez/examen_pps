@@ -10,3 +10,6 @@ def on_startup():
 
 app.include_router( tasks.router )
 
+@app.get("/version")
+def version():
+    return {"message": "Dominguez, Romeo - v0"}
