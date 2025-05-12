@@ -70,3 +70,16 @@ jobs:
           docker rm api-container || true
           docker run -d -p 8000:8000 --name api-container ${{ secrets.USER_DH }}/${{ env.DOCKER_IMAGE_NAME }}:latest
           EOF
+
+      healthcheck:
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Comprobar estado de la app
+        uses: dawidd6/action-http-request@v3
+        with:
+          url: http://${{ secrets.IP_EC2 }}:8000/version
+          method: GET
+          timeout: 10
+          expected_status: 200
