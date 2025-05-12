@@ -10,6 +10,7 @@ async def on_startup():
     """Evento que se ejecuta al iniciar la aplicación."""
     create_db_and_tables()
 
+
 app.include_router(tasks.router)
 
 
