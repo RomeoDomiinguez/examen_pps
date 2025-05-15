@@ -17,6 +17,7 @@ app.include_router(tasks.router)
 @app.get("/version")
 async def get_version():
     """Endpoint que devuelve la versión de la API."""
+    test = true
     return {"message": "Dominguez, Romeo - vFINAL2"}
 
 
